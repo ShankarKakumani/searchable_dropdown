@@ -71,7 +71,7 @@ class _PopupMenuRouteLayout extends SingleChildLayoutDelegate {
     double y = position.top;
 
     if (autoSwitchDropDownDirection && position.top > size.height / 2) {
-      y = position.top - childSize.height - buttonSize.height;
+      y = position.top - childSize.height - buttonSize.height - 10;
     } else {
       double y = position.top - childSize.height - buttonSize.height;
       if (y + childSize.height > size.height - keyBoardHeight) {
