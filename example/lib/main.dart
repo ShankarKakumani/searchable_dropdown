@@ -494,6 +494,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 300,
                         ),
                       ),
+                      autoSwitchDropDownDirection: true,
                     ),
                   )
                 ],
@@ -577,6 +578,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
               ),
+              SizedBox(height: 500,),
             ],
           ),
         ),

@@ -7,6 +7,7 @@ Future<T?> showCustomMenu<T>({
   required MenuProps menuModeProps,
   required RelativeRect position,
   required Widget child,
+  required bool autoSwitchDropDownDirection,
 }) {
   final NavigatorState navigator = Navigator.of(context);
   return navigator.push(
@@ -19,6 +20,7 @@ Future<T?> showCustomMenu<T>({
         from: context,
         to: navigator.context,
       ),
+      autoSwitchDropDownDirection: autoSwitchDropDownDirection,
     ),
   );
 }
@@ -28,10 +30,12 @@ class _PopupMenuRouteLayout extends SingleChildLayoutDelegate {
   // Rectangle of underlying button, relative to the overlay's dimensions.
   final RelativeRect position;
   final BuildContext context;
+  final bool autoSwitchDropDownDirection;
 
   _PopupMenuRouteLayout(
     this.context,
     this.position,
+    this.autoSwitchDropDownDirection,
   );
 
   @override
@@ -59,16 +63,17 @@ class _PopupMenuRouteLayout extends SingleChildLayoutDelegate {
 
     //keyBoardHeight is height of keyboard if showing
     double keyBoardHeight = MediaQuery.of(context).viewInsets.bottom;
-
     double x = position.left;
-
-    // Find the ideal vertical position.
     double y = position.top;
-    // check if we are in the bottom
-    if (y + childSize.height > size.height - keyBoardHeight) {
-      y = size.height - childSize.height - keyBoardHeight;
-    }
 
+    if (autoSwitchDropDownDirection && position.top > size.height / 2) {
+      y = position.top - childSize.height - 50;
+    } else {
+      double y = position.top - childSize.height - 50;
+      if (y + childSize.height > size.height - keyBoardHeight) {
+        y = size.height - childSize.height - keyBoardHeight;
+      }
+    }
     return Offset(x, y);
   }
 
@@ -84,6 +89,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
   final RelativeRect position;
   final Widget child;
   final CapturedThemes capturedThemes;
+  final bool autoSwitchDropDownDirection;
 
   _PopupMenuRoute({
     required this.context,
@@ -91,6 +97,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
     required this.position,
     required this.capturedThemes,
     required this.child,
+    required this.autoSwitchDropDownDirection,
   });
 
   @override
@@ -128,7 +135,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
     );
 
     return CustomSingleChildLayout(
-      delegate: _PopupMenuRouteLayout(context, position),
+      delegate: _PopupMenuRouteLayout(context, position, autoSwitchDropDownDirection),
       child: capturedThemes.wrap(menu),
     );
   }

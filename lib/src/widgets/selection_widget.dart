@@ -17,6 +17,7 @@ class SelectionWidget<T> extends StatefulWidget {
   final List<T> defaultSelectedItems;
   final PopupPropsMultiSelection<T> popupProps;
   final bool isMultiSelectionMode;
+  final bool autoSwitchDropDownDirection;
 
   const SelectionWidget({
     Key? key,
@@ -29,6 +30,7 @@ class SelectionWidget<T> extends StatefulWidget {
     this.itemAsString,
     this.filterFn,
     this.compareFn,
+    this.autoSwitchDropDownDirection = true
   }) : super(key: key);
 
   @override
@@ -111,6 +113,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
         valueListenable: _selectedItemsNotifier,
         builder: (ctx, value, wdgt) {
           return Column(
+            verticalDirection: VerticalDirection.down,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
