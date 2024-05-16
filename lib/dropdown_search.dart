@@ -619,6 +619,7 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
       ),
       autoSwitchDropDownDirection: widget.autoSwitchDropDownDirection,
       child: _popupWidgetInstance(),
+      buttonSize: popupButtonObject.size
     );
   }
 

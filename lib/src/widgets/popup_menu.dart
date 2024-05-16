@@ -8,6 +8,7 @@ Future<T?> showCustomMenu<T>({
   required RelativeRect position,
   required Widget child,
   required bool autoSwitchDropDownDirection,
+  required Size buttonSize,
 }) {
   final NavigatorState navigator = Navigator.of(context);
   return navigator.push(
@@ -21,6 +22,7 @@ Future<T?> showCustomMenu<T>({
         to: navigator.context,
       ),
       autoSwitchDropDownDirection: autoSwitchDropDownDirection,
+      buttonSize: buttonSize,
     ),
   );
 }
@@ -31,11 +33,13 @@ class _PopupMenuRouteLayout extends SingleChildLayoutDelegate {
   final RelativeRect position;
   final BuildContext context;
   final bool autoSwitchDropDownDirection;
+  final Size buttonSize;
 
   _PopupMenuRouteLayout(
     this.context,
     this.position,
     this.autoSwitchDropDownDirection,
+    this.buttonSize,
   );
 
   @override
@@ -67,12 +71,16 @@ class _PopupMenuRouteLayout extends SingleChildLayoutDelegate {
     double y = position.top;
 
     if (autoSwitchDropDownDirection && position.top > size.height / 2) {
-      y = position.top - childSize.height - 50;
+      y = position.top - childSize.height - buttonSize.height;
     } else {
-      double y = position.top - childSize.height - 50;
+      double y = position.top - childSize.height - buttonSize.height;
       if (y + childSize.height > size.height - keyBoardHeight) {
         y = size.height - childSize.height - keyBoardHeight;
       }
+    }
+
+    if(y <0) {
+      y = 0;
     }
     return Offset(x, y);
   }
@@ -90,6 +98,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
   final Widget child;
   final CapturedThemes capturedThemes;
   final bool autoSwitchDropDownDirection;
+  final Size buttonSize;
 
   _PopupMenuRoute({
     required this.context,
@@ -98,6 +107,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
     required this.capturedThemes,
     required this.child,
     required this.autoSwitchDropDownDirection,
+    required this.buttonSize,
   });
 
   @override
@@ -135,7 +145,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
     );
 
     return CustomSingleChildLayout(
-      delegate: _PopupMenuRouteLayout(context, position, autoSwitchDropDownDirection),
+      delegate: _PopupMenuRouteLayout(context, position, autoSwitchDropDownDirection, buttonSize),
       child: capturedThemes.wrap(menu),
     );
   }
